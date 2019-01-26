@@ -14,7 +14,7 @@ plt.figure(1)
 
 #print(date)
 
-def trading_system(score) :
+def trading_system(score, capital, cap_dail_p) :
   dmi_plus = returns['DMI_PLUS']
   dmi_minus = returns['DMI_MINUS']
   px_last = returns['PX_LAST']
@@ -27,8 +27,19 @@ def trading_system(score) :
   ema_5 = returns['EMA(5)']
   ema_20 = returns['EMA(20)']
   
-  for i in range(360) :
+  px_open = returns['PX_OPEN']
+  px_last = returns['PX_LAST']
+  cap_dail_p = returns['PX_LAST']/returns['PX_LAST'].shift(1)
+  cap_dail_p[0] = 1.0
+  
+  buy = sell = 0
+  status = 0
+  
+  for i in xrange(dmi_plus.size-1) :
     score.append(0)
+    #cap_dail_p.append(0)
+    if i>0:
+      capital.append(capital[i-1])
     if (dmi_plus[i] > dmi_minus[i]) :
       score[i] += 1
     elif (dmi_plus[i] < dmi_minus[i]) :
@@ -53,16 +64,42 @@ def trading_system(score) :
       score[i] += 1
     elif (ema_5[i] > ema_20[i]) :
       score[i] -= 1
+      
+    if (status == 1):
+      capital[i] = capital[i] * cap_dail_p[i]
+      
+    if (score[i] >= 4 and status == 0):
+      buy = i
+      status = 1
+    if (score[i] <= -4 and status == 1):
+      sell = i
+      status = 0
+      #capital[i] = capital[i] * cap_dail_p[i]
+    
+  print(capital)
+  return capital
 
-
-plt.subplot(211)
+plt.subplot(411)
 #returns.plot()
 plt.title('Stock Data')
 plt.xlabel('Time')
 plt.legend(loc=0)
 score = []
-trading_system(score)
+capital = [100]
+cap_daily_p = [0]*returns.size
+cap = trading_system(score, capital, cap_daily_p)
 plt.plot(score)
+plt.subplot(412)
+plt.plot(cap_daily_p)
+plt.subplot(413)
+plt.plot(cap)
+
+cap.append(0)
+score.append(0)
+px_last = returns['PX_LAST']
+d = returns.index.tolist()
+ex = pd.DataFrame({'Score': score, 'Capital': cap, 'Last_Price': px_last})
+ex.to_excel('export.xlsx', sheet_name='export')
 
 '''
 plt.subplot(311)
@@ -82,7 +119,7 @@ plt.legend(loc=0)
 plt.plot(bb)
 '''
 
-ax = plt.subplot(212)
+ax = plt.subplot(414)
 candlestick2_ohlc(ax, returns['PX_OPEN'], returns['PX_HIGH'], returns['PX_LOW'], returns['PX_LAST'], width=0.3)
 xdate = returns.index
 
