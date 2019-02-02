@@ -1,3 +1,14 @@
+import sys
+sys.path.append('../')
+
+from AlgoTemplate.AlgoTemplate import Algorithm
+
+class IndexWeighting(Algorithm):
+  def __int__(self):
+    self.data = 1
+  def Out(self):
+    return 222
+
 def trading_system(returns) :
   score = []
   capital = [100]
