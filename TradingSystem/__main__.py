@@ -6,7 +6,7 @@ import matplotlib.dates as mdates
 import datetime as datetime
 from mpl_finance import candlestick2_ohlc
 
-from Algorithm.IndexWeighting.IndexWeighting import trading_system
+from Algorithm.Demo import Demo as IW
 
 returns = pd.read_excel('Data/stock_data.xlsx', sheet_name=2, index_col=0)
 date = pd.read_excel('Data/stock_data.xlsx', sheet_name=2)
@@ -23,8 +23,9 @@ plt.subplot(411)
 plt.title('Stock Data')
 plt.xlabel('Time')
 plt.legend(loc=0)
-
-score, cap, cap_daily_p = trading_system(returns)
+  
+oiw = IW.Model(returns)
+score, cap, cap_daily_p = oiw.Core()
 plt.plot(score)
 plt.subplot(412)
 plt.plot(cap_daily_p)

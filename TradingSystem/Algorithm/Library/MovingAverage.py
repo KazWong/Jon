@@ -6,6 +6,4 @@ class M():
   def SMA(self, prices):
     period = len(prices)
     return period
-  def DaDa(self):
-    return da
   
