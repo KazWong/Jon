@@ -25,13 +25,12 @@ class Model(Template):
   def Core(self):
     score = []
     capital = [100]
-    buy = sell = 0
-    status = 0
+    position = [0, 0]
   
     for i in xrange(self.dmi_plus.size-1) :
       score.append(0)
-      #cap_dail_p.append(0)
       if i>0:
+        position.append(position[i-1])
         capital.append(capital[i-1])
       if (self.dmi_plus[i] > self.dmi_minus[i]) :
         score[i] += 1
@@ -58,15 +57,16 @@ class Model(Template):
       elif (self.ema_5[i] > self.ema_20[i]) :
         score[i] -= 1
       
-      if (status == 1):
-        capital[i] = capital[i] * self.cap_dail_p[i]
+      if (position[i-1] == 1 or position[i-1] == -1):
+        capital[i] = capital[i] * (1 + (self.cap_dail_p[i]* position[i-1]))
       
-      if (score[i] >= 4 and status == 0):
-        buy = i
-        status = 1
-      if (score[i] <= -4 and status == 1):
-        sell = i
-        status = 0
-        #capital[i] = capital[i] * cap_dail_p[i]
+      if (score[i] >= 4 and position[i-1] == 0):
+        position[i] = 1
+      if (score[i] <= -4 and position[i-1] == 0):
+        position[i] = -1
+      if (score[i] <= 0 and position[i-1] == 1):
+        position[i] = 0
+      if (score[i] >= 0 and position[i-1] == -1):
+        position[i] = 0
     
-    return score, capital, self.cap_dail_p
+    return score, capital, self.cap_dail_p, position

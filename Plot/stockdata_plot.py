@@ -6,8 +6,8 @@ import matplotlib.dates as mdates
 import datetime as datetime
 from mpl_finance import candlestick2_ohlc
 
-returns = pd.read_excel('stock_data.xlsx', sheet_name=2, index_col=0)
-date = pd.read_excel('stock_data.xlsx', sheet_name=2)
+returns = pd.read_excel('../Data/stock_data.xlsx', sheet_name='Sheet2', index_col=0)
+date = pd.read_excel('../Data/stock_data.xlsx', sheet_name='Sheet2')
 
 
 plt.figure(1)
@@ -71,13 +71,13 @@ def trading_system(score, capital, cap_dail_p) :
     if (score[i] >= 4 and status == 0):
       buy = i
       status = 1
-    if (score[i] <= -4 and status == 1):
+    if (score[i] <= 0 and status == 1):
       sell = i
       status = 0
       #capital[i] = capital[i] * cap_dail_p[i]
     
   print(capital)
-  return capital
+  return capital, cap_dail_p
 
 plt.subplot(411)
 #returns.plot()
@@ -87,10 +87,10 @@ plt.legend(loc=0)
 score = []
 capital = [100]
 cap_daily_p = [0]*returns.size
-cap = trading_system(score, capital, cap_daily_p)
+cap, capp = trading_system(score, capital, cap_daily_p)
 plt.plot(score)
 plt.subplot(412)
-plt.plot(cap_daily_p)
+plt.plot(capp)
 plt.subplot(413)
 plt.plot(cap)
 
@@ -99,7 +99,7 @@ score.append(0)
 px_last = returns['PX_LAST']
 d = returns.index.tolist()
 ex = pd.DataFrame({'Score': score, 'Capital': cap, 'Last_Price': px_last})
-ex.to_excel('export.xlsx', sheet_name='export')
+ex.to_excel('../Data/export.xlsx', sheet_name='export')
 
 '''
 plt.subplot(311)
