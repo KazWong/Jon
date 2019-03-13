@@ -1,3 +1,4 @@
 *.pyc
 *.~lock
+TradingSystem/.ipynb_checkpoints/
 export_TS.xlsx
