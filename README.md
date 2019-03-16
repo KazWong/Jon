@@ -1,0 +1,2 @@
+# Jon
+Trading Algorithm
