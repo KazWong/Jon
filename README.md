@@ -32,14 +32,14 @@ TradingSystem
  |- __main__  
  |- Ipynb_importer  
  |  
- |- Testbench
- |   |
- |   |- .....
- |
+ |- Testbench  
+ |   |  
+ |   |- .....  
+ |  
  |- Data  
  |   |  
  |   |- stock_data.xlsx  
- |   |
+ |   |  
  |   |- grap data from xlsx  
  |   |- grap data from bloomberg  
  |   
